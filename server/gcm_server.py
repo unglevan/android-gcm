@@ -9,7 +9,7 @@ import urllib
 import urllib2
 import urlparse
 
-API_KEY = None
+API_KEY = "AIzaSyC462i8ssvpzgiXErpO7yU9ds5Qs-5DsUQ"
 reg_id_set = set()
 
 class GCMHandler(BaseHTTPServer.BaseHTTPRequestHandler):
@@ -108,7 +108,6 @@ class GCMHandler(BaseHTTPServer.BaseHTTPRequestHandler):
       reg_id_set = reg_id_set.union(set(params['reg_id']))
       self.send_response(200)
       return
-
     self.send_response(400)
     return
 
@@ -208,16 +207,18 @@ class GCMHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 def main(argv):
   global API_KEY
 
-  if len(argv) != 1:
-    sys.stderr.write('Usage: gcm_server.py\n')
+  if len(argv) != 2:
+    sys.stderr.write('Usage: gcm_server.py port\n')
     sys.exit(1)
 
+  port = int(argv[1])
   if API_KEY is None:
     sys.stderr.write('Missing API_KEY\n')
     sys.exit(1)
 
-  server = BaseHTTPServer.HTTPServer(('', 8080), GCMHandler)
-  print 'Starting server on port 8080'
+  server = BaseHTTPServer.HTTPServer(('', port), GCMHandler)
+  print 'Starting server on port %d', port
+
   server.serve_forever()
 
 if __name__ == '__main__':
